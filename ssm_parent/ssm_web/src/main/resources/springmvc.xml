@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context-4.2.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+    <!--1.导入service的配置文件，用到它里面面的容器的bean-->
+    <!--由于依赖了service，所以可以找到service中的resources的文件-->
+        <import resource="classpath:spring-service.xml"/>
+    <!--2.controller包扫描，用于注解-->
+        <context:component-scan base-package="com.mochaoxiong.controller"/>
+    <!--3.注解驱动：mvc的注解驱动,注意命名空间选择，选择mvc结尾的-->
+        <mvc:annotation-driven/>
+    <!--4.视图解析器：根据controller的方法（处理器）返回值，
+           加上前缀后缀进行请求转发(访问静态资源时需要全路径）-->
+        <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+            <property name="prefix" value="/WEB-INF/pages/"/>
+            <property name="suffix" value=".jsp"/>
+        </bean>
+    <!--5.静态资源过滤：默认的servlet处理方式-->
+    <!--对进入DispatcherServlet的URL进行筛查，如果发现是静态资源的请求，
+         就将该请求转由Web应用服务器默认的Servlet处理，如果不是静态资源的请求，
+         才由DispatcherServlet继续处理-->
+        <mvc:default-servlet-handler/>
+</beans>

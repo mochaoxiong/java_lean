@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context 
+       http://www.springframework.org/schema/context/spring-context-4.2.xsd
+       http://www.springframework.org/schema/tx
+       http://www.springframework.org/schema/tx/spring-tx.xsd
+       http://www.springframework.org/schema/aop
+       http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <!--、1.导入dao的配置文件（为了用里面的bean，容器里的类对象）-->
+    <import resource="classpath:spring-mybatis.xml"/>
+    <!--、2.配置方式的事务管理器-->
+    <!--、可以和注解方式的事务共存-->
+    <!--、事务管理器-->
+        <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+            <property name="dataSource" ref="dataSource"/>
+        </bean>
+    <!--、advice 通知，事务规则,注意命名空间选择tx： xmlns:tx=http://www.springframework.org/schema/tx-->
+        <tx:advice id="advice" transaction-manager="transactionManager">
+            <tx:attributes>
+                <!--对应方法参与事务并且在事务下执行，事务隔离剂别使用默认隔离级别,发生异常需要事务回滚-->
+                <!--name表示匹配方法,只要匹配就采用事务，*为通配符-->
+                <!--add* 表示所有以add开头的方法，都服从事务规则-->
+                <tx:method name="add*" isolation="DEFAULT" propagation="REQUIRED" rollback-for="java.lang.Exception" />
+                <tx:method name="insert*" isolation="DEFAULT" propagation="REQUIRED" rollback-for="java.lang.Exception" />
+                <tx:method name="save*" isolation="DEFAULT" propagation="REQUIRED" rollback-for="java.lang.Exception" />
+                <tx:method name="delete*" isolation="DEFAULT" propagation="REQUIRED" rollback-for="java.lang.Exception" />
+                <tx:method name="update*" isolation="DEFAULT" propagation="REQUIRED" rollback-for="java.lang.Exception" />
+                <tx:method name="edit*" isolation="DEFAULT" propagation="REQUIRED" rollback-for="java.lang.Exception" />
+                <!--所有其他方法（没配置的）都是只读，只读操作-->
+                <tx:method name="*" read-only="true" />
+            </tx:attributes>
+        </tx:advice>
+    <!--、aop，切面配置-->
+        <aop:config>
+            <!--设置那个方法是切入点，星号：返回值、类、方法。
+                点：任意子目录、子目录、任意参数-->
+            <aop:pointcut id="myPoint" expression="execution(* com.mochaoxiong..*.*(..))"/>
+            <!--设置advice通知事务对应到切入点-->
+            <aop:advisor advice-ref="advice" pointcut-ref="myPoint"/>
+        </aop:config>
+    <!--、3.注解方式的事务：加载 事务的注解驱动-->
+        <tx:annotation-driven transaction-manager="transactionManager"/>
+    <!--、4.扫service包，不然无法使用注解-->
+    <!--、注意此处使用context命名空间而不是dtd-->
+        <context:component-scan base-package="com.mochoaxiong.service"/>
+
+
+
+</beans>  

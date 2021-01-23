@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context-4.2.xsd">
+    <!--1.数据源-->
+    <!--引入外部properties属性-->
+    <context:property-placeholder location="classpath:jdbc.properties"/>
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource">
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+        <property name="url" value="${jdbc.url}"/>
+        <property name="driverClassName" value="${jdbc.driver}"/>
+    </bean>
+    <!--2.工厂-->
+    <bean class="org.mybatis.spring.SqlSessionFactoryBean">
+        <!--ref的DataSource指的是spring容器的，name指的是在工厂里的被赋值的-->
+        <property name="dataSource" ref="dataSource"/>
+        <!--pojo别名的包扫描，即需要包扫描后才可以使用pojo的别名（忽略大小写）-->
+        <property name="typeAliasesPackage" value="com.mochaoxiong.pojo"/>
+    </bean>
+    <!--3.mapper扫描,直接将包里所有的映射配置文件扫进来-->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.mochaoxiong.dao"/>
+    </bean>
+
+</beans>  
