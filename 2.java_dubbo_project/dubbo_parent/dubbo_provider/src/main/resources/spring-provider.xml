@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context" xmlns:dubbo="http://dubbo.apache.org/schema/dubbo"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context 
+       http://www.springframework.org/schema/context/spring-context-4.2.xsd http://dubbo.apache.org/schema/dubbo http://dubbo.apache.org/schema/dubbo/dubbo.xsd">
+
+    <!--注册服务的名称，名称必须唯一-->
+    <dubbo:application name="dubbo_provider"/>
+    <!--注册到注册中心-->
+    <!--此次选择的是zookeeper的注册中心，也可以选其他的，比如redis-->
+    <!--127.0.0.1是环回地址，即环回到本机ip地址,端口号为zookeeper的服务器端口号-->
+    <dubbo:registry address="zookeeper://127.0.0.1:2181"/>
+    <!--指定发布的服务-->
+    <!--interface：发布的接口 消费者通过调用接口找到实现类
+        ref：接口的实现类，这个类放到了service的spring容器中，
+        因此下面也要导入其他配置文件的容器-->
+    <dubbo:service interface="com.mochaoxiong.service.UserService" ref="userService"/>
+    <!--导入service配置-->
+    <import resource="classpath:spring-service.xml"/>
+</beans>  

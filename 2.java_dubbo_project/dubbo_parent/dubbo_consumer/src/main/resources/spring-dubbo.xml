@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dubbo="http://dubbo.apache.org/schema/dubbo"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd http://dubbo.apache.org/schema/dubbo http://dubbo.apache.org/schema/dubbo/dubbo.xsd">
+    <!--注册服务的名称，名称必须唯一-->
+    <dubbo:application name="dubbo_consumer"/>
+    <!--注册到注册中心-->
+    <!--此次选择的是zookeeper的注册中心，也可以选其他的，比如redis-->
+    <!--127.0.0.1是环回地址，即环回到本机ip地址,端口号为zookeeper的服务器端口号-->
+    <dubbo:registry address="zookeeper://127.0.0.1:2181"/>
+    <!--订阅的服务-->
+    <!--因为发布注册的是接口，因此监听订阅的也是接口，
+    而发布和监听的对象是接口对应的注册中心的节点-->
+    <!--接口调用使用jdk动态代理，将接口注册到web工程的spring容器中，bean对象的id就是下面的id
+    使得能够使用-->
+    <dubbo:reference interface="com.mochaoxiong.service.UserService" id="userService"/>
+
+
+</beans>
