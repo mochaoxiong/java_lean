@@ -1,0 +1,22 @@
+server:
+  port: 18083
+
+
+spring:
+  application:
+      #给系统（微服务）起个名字
+    name: eureka-server
+eureka:
+  client:
+    #是否将自己注册为客户端（选择否，因为这个微服务作为服务端使用）
+    register-with-eureka: false
+    #是否从服务端拉取（客户端的话，需要从服务端拉取注册中心服务端的内容，如ip和端口）
+    fetch-registry: false
+    #erueka服务端的注册地址（基于REST的，即http协议）
+    service-url:
+      defaultZone: http://localhost:18083/eureka
+  server:
+    #失效剔除
+    #eviction-interval-timer-in-ms: 5000
+    #手动关闭自我保护机制
+    enable-self-preservation: true
