@@ -1,0 +1,36 @@
+# 注释版本
+server:
+  port: 18085
+spring:
+  application:
+    name: api-gateway # 服务名称，应用名
+  cloud:
+    gateway:
+      routes:
+      #id唯一标识，可自定义
+      #前面有个 横杆-和空格
+      - id: user-service-route
+        #路由的服务地址
+        #达到了规则后，需要转发的微服务路径
+        #uri: http://localhost:18081
+        #动态路由，并能够动态路由
+        uri: lb://user-provider
+        # 路由拦截的地址配置（断言）
+        # 规则配置（可以有很多种，这种是路径条件规则）
+        #如果请求是http://localhost:18085/user/1（先请求网关）
+        #则会转发到http://localhost:18081/user/1转发到对应的微服务）
+        predicates:
+        - Path=/user/**
+
+user-provider:
+  ribbon:
+    # 修改服务地址轮询策略，默认是轮询，配置之后变随机
+    NFLoadBalancerRuleClassName: com.netflix.loadbalancer.RoundRobinRule
+
+
+# Eureka服务中心配置
+eureka:
+  client:
+    service-url:
+      # 注册Eureka Server集群
+      defaultZone: http://127.0.0.1:18083/eureka

@@ -13,6 +13,7 @@
         <module>user_provider</module>
         <module>user_provider_01</module>
         <module>eureka_server</module>
+        <module>gateway_service</module>
     </modules>
 
     <!--父工程-->
