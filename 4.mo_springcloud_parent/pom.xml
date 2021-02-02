@@ -14,6 +14,7 @@
         <module>user_provider_01</module>
         <module>eureka_server</module>
         <module>gateway_service</module>
+        <module>config_server</module>
     </modules>
 
     <!--父工程-->
